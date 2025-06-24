@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>員工打卡系統</title>
+  <style>
+    body {
+      font-family: "微軟正黑體";
+      text-align: center;
+      padding: 50px;
+      background-color: #f2f2f2;
+    }
+    input, select, button {
+      padding: 10px;
+      margin: 10px;
+      font-size: 16px;
+    }
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔒 員工打卡系統</h1>
+  <input type="text" id="name" placeholder="請輸入姓名" />
+  <select id="type">
+    <option value="上班">上班</option>
+    <option value="下班">下班</option>
+  </select>
+  <br>
+  <button onclick="clockIn()">打卡</button>
+  <div id="result"></div>
+
+  <script>
+    async function clockIn() {
+      const name = document.getElementById("name").value.trim();
+      const type = document.getElementById("type").value;
+      const resultBox = document.getElementById("result");
+
+      if (!name) {
+        resultBox.style.color = "red";
+        resultBox.textContent = "請輸入姓名！";
+        return;
+      }
+
+      const url = "https://script.google.com/macros/s/AKfycbxCTGweV5TkZ-BUiLNHTiNAlSz--2nnBlHvlNxx5rvtSyesSJeSgiNi3c-kx8Mey2U35w/exec"; // 
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("type", type);
+
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          body: formData,
+        });
+        const text = await res.text();
+        resultBox.style.color = "green";
+        resultBox.textContent = text;
+      } catch (err) {
+        resultBox.style.color = "red";
+        resultBox.textContent = "打卡失敗，請稍後再試！";
+      }
+    }
+  </script>
+</body>
+</html>
